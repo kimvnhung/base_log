@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.10)
 
 project(base_log LANGUAGES CXX)
 
-find_package(spdlog REQUIRED)
+find_package(fmt REQUIRED)
 find_package(GTest REQUIRED)
 
 add_library(base_log
@@ -11,8 +11,6 @@ add_library(base_log
 )
 
 target_link_libraries(base_log
-    PRIVATE
-        spdlog::spdlog
     PUBLIC
         fmt::fmt
 )
