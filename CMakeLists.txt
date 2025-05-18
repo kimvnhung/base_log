@@ -4,7 +4,6 @@ project(base_log LANGUAGES CXX)
 
 find_package(spdlog REQUIRED)
 find_package(GTest REQUIRED)
-find_package(fmt REQUIRED)
 
 add_library(base_log
     "${CMAKE_CURRENT_SOURCE_DIR}/include/base_log.h"
@@ -14,6 +13,7 @@ add_library(base_log
 target_link_libraries(base_log
     PRIVATE
         spdlog::spdlog
+    PUBLIC
         fmt::fmt
 )
 
@@ -30,7 +30,7 @@ if(ENABLE_TESTS)
     add_executable(test_base_log tests/test.cpp)
 
     # Link the test executable with the base_log library and GTest
-    target_link_libraries(test_base_log PRIVATE GTest::gtest_main base_log fmt::fmt)
+    target_link_libraries(test_base_log PRIVATE GTest::gtest_main base_log)
 
     # Register the test with CTest
     add_test(NAME TestBaseLog COMMAND test_base_log)
