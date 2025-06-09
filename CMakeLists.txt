@@ -2,8 +2,14 @@ cmake_minimum_required(VERSION 3.10)
 
 project(base_log LANGUAGES CXX)
 
-find_package(fmt REQUIRED)
-find_package(GTest REQUIRED)
+include(FetchContent)
+FetchContent_Declare(
+    fmt
+    GIT_REPOSITORY https://github.com/fmtlib/fmt.git
+    GIT_TAG 10.2.1
+)
+FetchContent_MakeAvailable(fmt)
+
 
 add_library(base_log
     "${CMAKE_CURRENT_SOURCE_DIR}/include/base_log.h"
@@ -20,8 +26,9 @@ target_include_directories(base_log PUBLIC
 )
 
 # Add test target with option
-option(ENABLE_TESTS "Enable tests" ON)
+option(ENABLE_TESTS "Enable tests" OFF)
 if(ENABLE_TESTS)
+    find_package(GTest REQUIRED)
     enable_testing()  # Enable CTest
 
     # Add test executable
