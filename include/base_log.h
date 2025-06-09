@@ -9,11 +9,13 @@
 #define LOG_TAG "BASE_LOG"
 #endif
 
-#define TRACE(...)          log_message("TRACE",LOG_TAG, "{}", __VA_ARGS__)
-#define TRACEF(format,...)  log_message("TRACE",LOG_TAG,format, __VA_ARGS__)
+#define FUNCTION_NAME fmt::format("{} {}", LOG_TAG, __func__).c_str()
 
-#define DEBUG(...)          log_message("DEBUG",LOG_TAG, "{}", __VA_ARGS__)
-#define DEBUGF(format,...)  log_message("DEBUG",LOG_TAG,format, __VA_ARGS__)
+#define TRACE(...)          log_message("TRACE",FUNCTION_NAME, "{}", __VA_ARGS__)
+#define TRACEF(format,...)  log_message("TRACE",FUNCTION_NAME,format, __VA_ARGS__)
+
+#define DEBUG(...)          log_message("DEBUG",FUNCTION_NAME, "{}", __VA_ARGS__)
+#define DEBUGF(format,...)  log_message("DEBUG",FUNCTION_NAME,format, __VA_ARGS__)
 
 #define INFO(...)          log_message("INFO",LOG_TAG, "{}", __VA_ARGS__)
 #define INFOF(format,...)  log_message("INFO",LOG_TAG,format, __VA_ARGS__)
