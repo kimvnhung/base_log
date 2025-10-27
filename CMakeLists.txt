@@ -10,11 +10,39 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(fmt)
 
+set_target_properties(fmt PROPERTIES POSITION_INDEPENDENT_CODE ON)
+
+
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+option(BASE_LOG_SHARED "Build base_log as shared lib" ON)
 
 add_library(base_log
     "${CMAKE_CURRENT_SOURCE_DIR}/include/base_log.h"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/base_log.cpp"
 )
+
+if(BASE_LOG_SHARED)
+    set_target_properties(base_log PROPERTIES
+        POSITION_INDEPENDENT_CODE ON
+        BUILD_SHARED_LIBS ON
+    )
+
+endif()
+
+target_compile_definitions(base_log
+    PUBLIC
+        PROJECT_SOURCE_DIR="${CMAKE_SOURCE_DIR}/"
+)
+
+# Check if existed LOG_TAG macro is defined
+# If not , got the ROOT project name as LOG_TAG
+if(NOT DEFINED LOG_TAG)
+    get_filename_component(ROOT_PROJECT_NAME ${CMAKE_SOURCE_DIR} NAME)
+    target_compile_definitions(base_log
+        PUBLIC
+            LOG_TAG="${ROOT_PROJECT_NAME}"
+    )
+endif()
 
 target_link_libraries(base_log
     PUBLIC
