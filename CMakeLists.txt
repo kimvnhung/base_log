@@ -16,6 +16,9 @@ set_target_properties(fmt PROPERTIES POSITION_INDEPENDENT_CODE ON)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 option(BASE_LOG_SHARED "Build base_log as shared lib" ON)
 
+# Try to find Qt Core for Qt-based logging
+find_package(Qt6 QUIET COMPONENTS Core)
+
 add_library(base_log
     "${CMAKE_CURRENT_SOURCE_DIR}/include/base_log.h"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/base_log.cpp"
@@ -48,6 +51,21 @@ target_link_libraries(base_log
     PUBLIC
         fmt::fmt
 )
+
+# If Qt6 Core is found, enable Qt logging
+if(Qt6_FOUND AND TARGET Qt6::Core)
+    message(STATUS "base_log: Qt6 Core found, enabling Qt logging support")
+    target_compile_definitions(base_log
+        PUBLIC
+            BASE_LOG_USE_QT
+    )
+    target_link_libraries(base_log
+        PUBLIC
+            Qt6::Core
+    )
+else()
+    message(STATUS "base_log: Qt6 Core not found, using standard iostream logging")
+endif()
 
 target_include_directories(base_log PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/include
