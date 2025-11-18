@@ -13,32 +13,39 @@
 #define PROJECT_SOURCE_DIR ""
 #endif
 
-#define FILE_PATH_REMOVE_PREFIX(path, prefix) \
-    (std::strncmp(path, prefix, sizeof(prefix) - 1) == 0 \
-        ? (path + sizeof(prefix) - 1) \
-        : path)
+constexpr const char* file_path_remove_prefix(const char* path, const char* prefix) {
+    const char* p = path;
+    const char* pr = prefix;
+    while (*pr && *p == *pr) {
+        ++p;
+        ++pr;
+    }
+    return (*pr == '\0') ? p : path;
+}
 
-#define FILE_NAME FILE_PATH_REMOVE_PREFIX(__FILE__, PROJECT_SOURCE_DIR)
+#define FILE_NAME file_path_remove_prefix(__FILE__, PROJECT_SOURCE_DIR)
 
-#define FUNCTION_NAME fmt::format("{} {} {}", LOG_TAG, FILE_NAME,__LINE__).c_str()
+inline std::string make_function_tag(const char* tag, const char* file, int line) {
+    return fmt::format("{} {} {}", tag, file, line);
+}
 
-#define TRACE(...)          log_message("T",FUNCTION_NAME, "{}", __VA_ARGS__)
-#define TRACEF(format,...)  log_message("T",FUNCTION_NAME,format, __VA_ARGS__)
+#define TRACE(...)          do { auto __tag = make_function_tag(LOG_TAG, FILE_NAME, __LINE__); log_message("T", __tag.c_str(), "{}", __VA_ARGS__); } while(0)
+#define TRACEF(format,...)  do { auto __tag = make_function_tag(LOG_TAG, FILE_NAME, __LINE__); log_message("T", __tag.c_str(), format, __VA_ARGS__); } while(0)
 
-#define DEBUG(...)          log_message("D",FUNCTION_NAME, "{}", __VA_ARGS__)
-#define DEBUGF(format,...)  log_message("D",FUNCTION_NAME,format, __VA_ARGS__)
+#define DEBUG(...)          do { auto __tag = make_function_tag(LOG_TAG, FILE_NAME, __LINE__); log_message("D", __tag.c_str(), "{}", __VA_ARGS__); } while(0)
+#define DEBUGF(format,...)  do { auto __tag = make_function_tag(LOG_TAG, FILE_NAME, __LINE__); log_message("D", __tag.c_str(), format, __VA_ARGS__); } while(0)
 
-#define INFO(...)          log_message("I",FUNCTION_NAME, "{}", __VA_ARGS__)
-#define INFOF(format,...)  log_message("I",FUNCTION_NAME,format, __VA_ARGS__)
+#define INFO(...)          do { auto __tag = make_function_tag(LOG_TAG, FILE_NAME, __LINE__); log_message("I", __tag.c_str(), "{}", __VA_ARGS__); } while(0)
+#define INFOF(format,...)  do { auto __tag = make_function_tag(LOG_TAG, FILE_NAME, __LINE__); log_message("I", __tag.c_str(), format, __VA_ARGS__); } while(0)
 
-#define WARN(...)          log_message("W",FUNCTION_NAME, "{}", __VA_ARGS__)
-#define WARNF(format,...)  log_message("W",FUNCTION_NAME,format, __VA_ARGS__)
+#define WARN(...)          do { auto __tag = make_function_tag(LOG_TAG, FILE_NAME, __LINE__); log_message("W", __tag.c_str(), "{}", __VA_ARGS__); } while(0)
+#define WARNF(format,...)  do { auto __tag = make_function_tag(LOG_TAG, FILE_NAME, __LINE__); log_message("W", __tag.c_str(), format, __VA_ARGS__); } while(0)
 
-#define ERROR(...)          log_message("E",FUNCTION_NAME, "{}", __VA_ARGS__)
-#define ERRORF(format,...)  log_message("E",FUNCTION_NAME,format, __VA_ARGS__)
+#define ERROR(...)          do { auto __tag = make_function_tag(LOG_TAG, FILE_NAME, __LINE__); log_message("E", __tag.c_str(), "{}", __VA_ARGS__); } while(0)
+#define ERRORF(format,...)  do { auto __tag = make_function_tag(LOG_TAG, FILE_NAME, __LINE__); log_message("E", __tag.c_str(), format, __VA_ARGS__); } while(0)
 
-#define CRITICAL(...)          log_message("C",FUNCTION_NAME, "{}", __VA_ARGS__)
-#define CRITICALF(format,...)  log_message("C",FUNCTION_NAME,format, __VA_ARGS__)
+#define CRITICAL(...)          do { auto __tag = make_function_tag(LOG_TAG, FILE_NAME, __LINE__); log_message("C", __tag.c_str(), "{}", __VA_ARGS__); } while(0)
+#define CRITICALF(format,...)  do { auto __tag = make_function_tag(LOG_TAG, FILE_NAME, __LINE__); log_message("C", __tag.c_str(), format, __VA_ARGS__); } while(0)
 
 
 /// Only forward declaration of dispatcher (defined in .cpp)
