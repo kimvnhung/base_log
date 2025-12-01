@@ -4,6 +4,7 @@
 #include <QDebug>
 #include <QString>
 #include <QDateTime>
+#include <QThread>
 #else
 #include <chrono>
 #include <ctime>
@@ -19,11 +20,12 @@ void log_dispatch(const char* type, const char* tag, const std::string& message)
     QString timestamp = QDateTime::currentDateTime().toString("yyyy-MM-dd HH:mm:ss.zzz");
     
     // Format: [timestamp] [type] [tag]: message
-    QString formattedMessage = QString("[%1] [%2] [%3]: %4")
+    QString formattedMessage = QString("[%1] [%2] [%3] [%4]: %5")
         .arg(timestamp)
+        // Print thread ID as hex
+        .arg(QString::number(reinterpret_cast<quintptr>(QThread::currentThreadId()), 16))
         .arg(type)
-        .arg(qtTag)
-        .arg(qtMessage);
+        .arg(qtTag, qtMessage);
     
     // Route to appropriate Qt logging function based on type
     switch(type[0]) {
