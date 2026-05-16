@@ -37,16 +37,6 @@ target_compile_definitions(base_log
         PROJECT_SOURCE_DIR="${CMAKE_SOURCE_DIR}/"
 )
 
-# Check if existed LOG_TAG macro is defined
-# If not , got the ROOT project name as LOG_TAG
-if(NOT DEFINED LOG_TAG)
-    get_filename_component(ROOT_PROJECT_NAME ${CMAKE_SOURCE_DIR} NAME)
-    target_compile_definitions(base_log
-        PUBLIC
-            LOG_TAG="${ROOT_PROJECT_NAME}"
-    )
-endif()
-
 target_link_libraries(base_log
     PUBLIC
         fmt::fmt
